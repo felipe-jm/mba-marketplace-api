@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  password String
+  products Product[]
+
+  @@map("users")
+}
+
+enum ProductStatus {
+  AVAILABLE
+  SOLD
+  CANCELLED
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  title        String
+  description  String
+  priceInCents Int           @map("price_in_cents")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime?     @updatedAt @map("updated_at")
+  status       ProductStatus
+
+  ownerId    String @map("owner_id")
+  categoryId String @map("category_id")
+
+  owner    User      @relation(fields: [ownerId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("products")
+}
+
+model Attachment {
+  id  String @id @default(uuid())
+  url String
+
+  @@map("attachments")
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String
+  slug  String @unique
+
+  products Product[]
+
+  @@map("categories")
+}
