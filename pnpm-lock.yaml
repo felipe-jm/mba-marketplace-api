@@ -20,6 +20,9 @@ dependencies:
   '@prisma/client':
     specifier: ^6.5.0
     version: 6.5.0(prisma@6.5.0)(typescript@5.8.2)
+  dayjs:
+    specifier: ^1.11.13
+    version: 1.11.13
   dotenv:
     specifier: ^16.4.7
     version: 16.4.7
@@ -2538,6 +2541,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
+    dev: false
 
   /debug@4.3.6:
     resolution: {integrity: sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==}

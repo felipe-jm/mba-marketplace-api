@@ -18,9 +18,9 @@ model User {
 }
 
 enum ProductStatus {
-  AVAILABLE
-  SOLD
-  CANCELLED
+  available
+  sold
+  cancelled
 }
 
 model Product {
