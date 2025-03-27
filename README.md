@@ -6,16 +6,11 @@
 pnpm install
 ```
 
-## Run
+## Setup environment variables
 
 ```bash
-pnpm run start:dev
-```
-
-## Test
-
-```bash
-pnpm run test
+cp .env.example .env
+cp .env.test.example .env.test
 ```
 
 ## Run database
@@ -40,6 +35,18 @@ npx prisma studio
 
 ```bash
 npx prisma migrate dev
+```
+
+## Run
+
+```bash
+pnpm run start:dev
+```
+
+## Test
+
+```bash
+pnpm run test
 ```
 
 ## Funcionalidades e Regras
