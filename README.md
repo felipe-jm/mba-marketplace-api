@@ -55,10 +55,10 @@ pnpm run test
   - [x] Deve ser feito o hash da senha do usuário
   - [x] Não deve ser possível cadastrar usuário com e-mail duplicado
   - [x] Não deve ser possível cadastrar usuário com telefone duplicado
-- [ ] Deve ser possível atualizar os dados do usuário
-  - [ ] Deve ser feito o hash da senha do usuário
-  - [ ] Não deve ser possível atualizar para um e-mail duplicado
-  - [ ] Não deve ser possível atualizar para um telefone duplicado
+- [x] Deve ser possível atualizar os dados do usuário
+  - [x] Deve ser feito o hash da senha do usuário
+  - [x] Não deve ser possível atualizar para um e-mail duplicado
+  - [x] Não deve ser possível atualizar para um telefone duplicado
 - [x] Deve ser possível obter o token de autenticação
   - [x] Não deve ser possível se autenticar com credenciais incorretas
 - [ ] Deve ser possível realizar o upload de arquivos

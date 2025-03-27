@@ -7,6 +7,8 @@ import { CreateProductUseCase } from "@/domain/marketplace/application/use-cases
 import { AuthenticateSellerUseCase } from "@/domain/marketplace/application/use-cases/authenticate-seller-use-case";
 import { RegisterSellerUseCase } from "@/domain/marketplace/application/use-cases/register-seller-use-case";
 import { CryptographyModule } from "../cryptography/cryptography.module";
+import { EditAccountController } from "./controllers/edit-account.controller";
+import { EditSellerUseCase } from "@/domain/marketplace/application/use-cases/edit-seller-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -14,11 +16,13 @@ import { CryptographyModule } from "../cryptography/cryptography.module";
     CreateAccountController,
     AuthenticateController,
     CreateProductController,
+    EditAccountController,
   ],
   providers: [
-    CreateProductUseCase,
-    AuthenticateSellerUseCase,
     RegisterSellerUseCase,
+    AuthenticateSellerUseCase,
+    CreateProductUseCase,
+    EditSellerUseCase,
   ],
 })
 export class HttpModule {}

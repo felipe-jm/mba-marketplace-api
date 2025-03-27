@@ -13,14 +13,14 @@ import { Public } from "@/infra/auth/public";
 import { RegisterSellerUseCase } from "@/domain/marketplace/application/use-cases/register-seller-use-case";
 import { SellerAlreadyExistsError } from "@/domain/marketplace/application/use-cases/errors/seller-already-exists-error";
 
-const createdAccountBodySchema = z.object({
+const createAccountBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
   phone: z.string(),
 });
 
-type CreateAccountBodySchema = z.infer<typeof createdAccountBodySchema>;
+type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>;
 
 @Controller("/sellers")
 @Public()
@@ -29,7 +29,7 @@ export class CreateAccountController {
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createdAccountBodySchema))
+  @UsePipes(new ZodValidationPipe(createAccountBodySchema))
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password, phone } = body;
 
