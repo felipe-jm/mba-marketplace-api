@@ -13,15 +13,19 @@ import { SellerAlreadyExistsError } from "@/domain/marketplace/application/use-c
 import { EditSellerUseCase } from "@/domain/marketplace/application/use-cases/edit-seller-use-case";
 import { CurrentUser } from "@/infra/auth/current-user-decorator";
 import { UserPayload } from "@/infra/auth/jwt.strategy";
+import { PasswordDoesNotMatchError } from "@/domain/marketplace/application/use-cases/errors/password-does-not-match-error";
 
 const editAccountBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  password: z.string(),
   phone: z.string(),
+  password: z.string(),
+  passwordConfirmation: z.string(),
 });
 
 type EditAccountBodySchema = z.infer<typeof editAccountBodySchema>;
+
+const bodyValidationPipe = new ZodValidationPipe(editAccountBodySchema);
 
 @Controller("/sellers/me")
 export class EditAccountController {
@@ -29,26 +33,21 @@ export class EditAccountController {
 
   @Put()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(editAccountBodySchema))
+  @UsePipes()
   async handle(
-    @Body() body: EditAccountBodySchema,
+    @Body(bodyValidationPipe) body: EditAccountBodySchema,
     @CurrentUser() user: UserPayload
   ) {
-    console.log("RAW BODY RECEIVED:", body);
-    console.log("BODY TYPE:", typeof body);
-    console.log("BODY KEYS:", Object.keys(body));
-    console.log("IS EMPTY?", Object.keys(body).length === 0);
-
     const { sub } = user;
-    console.log("EditAccountController BODY", body);
-    const { name, email, password, phone } = body;
+    const { name, email, phone, password, passwordConfirmation } = body;
 
     const result = await this.editSeller.execute({
       sellerId: sub,
       name,
       email,
-      password,
       phone,
+      password,
+      passwordConfirmation,
     });
 
     if (result.isLeft()) {
@@ -56,6 +55,8 @@ export class EditAccountController {
 
       if (error.constructor === SellerAlreadyExistsError) {
         throw new ConflictException(error.message);
+      } else if (error.constructor === PasswordDoesNotMatchError) {
+        throw new BadRequestException();
       } else {
         throw new BadRequestException(error.message);
       }

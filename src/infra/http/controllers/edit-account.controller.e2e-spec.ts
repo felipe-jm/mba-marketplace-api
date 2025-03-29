@@ -42,6 +42,7 @@ describe("Edit account (E2E)", () => {
         email: "johndoeedited@example.com",
         phone: "1234567891",
         password: "1234567",
+        passwordConfirmation: "1234567",
       });
 
     expect(response.statusCode).toBe(201);

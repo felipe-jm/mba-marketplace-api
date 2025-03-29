@@ -3,6 +3,7 @@ import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-r
 import { RegisterSellerUseCase } from "./register-seller-use-case";
 import { makeSeller } from "test/factories/make-seller";
 import { SellerAlreadyExistsError } from "./errors/seller-already-exists-error";
+import { PasswordDoesNotMatchError } from "./errors/password-does-not-match-error";
 
 let inMemorySellersRepository: InMemorySellersRepository;
 let fakeHasher: FakeHasher;
@@ -21,6 +22,7 @@ describe("Register Seller", () => {
       email: "johndoe@example.com",
       phone: "1234567890",
       password: "123456",
+      passwordConfirmation: "123456",
     });
 
     expect(result.isRight()).toBe(true);
@@ -35,6 +37,7 @@ describe("Register Seller", () => {
       email: "johndoe@example.com",
       phone: "1234567890",
       password: "123456",
+      passwordConfirmation: "123456",
     });
 
     const hashedPassword = await fakeHasher.hash("123456");
@@ -53,6 +56,7 @@ describe("Register Seller", () => {
       email: seller.email,
       phone: "1234567890",
       password: "123456",
+      passwordConfirmation: "123456",
     });
 
     expect(result.isLeft()).toBe(true);
@@ -69,9 +73,23 @@ describe("Register Seller", () => {
       email: "johndoe@example.com",
       phone: seller.phone,
       password: "123456",
+      passwordConfirmation: "123456",
     });
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(SellerAlreadyExistsError);
+  });
+
+  it("should not be able to register a seller with a different password and password confirmation", async () => {
+    const result = await sut.execute({
+      name: "New John Doe",
+      email: "johndoe@example.com",
+      phone: "1234567890",
+      password: "123456",
+      passwordConfirmation: "1234567",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(PasswordDoesNotMatchError);
   });
 });

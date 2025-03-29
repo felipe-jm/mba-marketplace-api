@@ -9,20 +9,25 @@ import { RegisterSellerUseCase } from "@/domain/marketplace/application/use-case
 import { CryptographyModule } from "../cryptography/cryptography.module";
 import { EditAccountController } from "./controllers/edit-account.controller";
 import { EditSellerUseCase } from "@/domain/marketplace/application/use-cases/edit-seller-use-case";
+import { UploadAttachmentController } from "./controllers/upload-attachment.controller";
+import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/application/use-cases/upload-and-create-attachment";
+import { StorageModule } from "../storage/storage.module";
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
     CreateAccountController,
     AuthenticateController,
     CreateProductController,
     EditAccountController,
+    UploadAttachmentController,
   ],
   providers: [
     RegisterSellerUseCase,
     AuthenticateSellerUseCase,
     CreateProductUseCase,
     EditSellerUseCase,
+    UploadAndCreateAttachmentUseCase,
   ],
 })
 export class HttpModule {}

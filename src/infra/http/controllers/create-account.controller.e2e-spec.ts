@@ -21,6 +21,7 @@ describe("Create account (E2E)", () => {
       email: "johndoe@example.com",
       phone: "1234567890",
       password: "123456",
+      passwordConfirmation: "123456",
     });
 
     expect(response.statusCode).toBe(201);

@@ -6,6 +6,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { HashGenerator } from "../cryptography/hash-generator";
 import { SellerAlreadyExistsError } from "./errors/seller-already-exists-error";
 import { SellerNotFoundError } from "./errors/seller-not-found-error";
+import { PasswordDoesNotMatchError } from "./errors/password-does-not-match-error";
 
 interface EditSellerUseCaseRequest {
   sellerId: string;
@@ -13,6 +14,7 @@ interface EditSellerUseCaseRequest {
   email: string;
   phone: string;
   password: string;
+  passwordConfirmation: string;
   avatarId?: UniqueEntityId;
 }
 
@@ -36,8 +38,13 @@ export class EditSellerUseCase {
     email,
     phone,
     password,
+    passwordConfirmation,
     avatarId,
   }: EditSellerUseCaseRequest): Promise<EditSellerUseCaseResponse> {
+    if (password !== passwordConfirmation) {
+      return left(new PasswordDoesNotMatchError());
+    }
+
     const seller = await this.sellersRepository.findById(sellerId);
 
     if (!seller) {
@@ -46,13 +53,13 @@ export class EditSellerUseCase {
 
     const sellerWithSameEmail = await this.sellersRepository.findByEmail(email);
 
-    if (sellerWithSameEmail && sellerWithSameEmail.id.toString() !== sellerId) {
+    if (sellerWithSameEmail) {
       return left(new SellerAlreadyExistsError());
     }
 
     const sellerWithSamePhone = await this.sellersRepository.findByPhone(phone);
 
-    if (sellerWithSamePhone && sellerWithSamePhone.id.toString() !== sellerId) {
+    if (sellerWithSamePhone) {
       return left(new SellerAlreadyExistsError());
     }
 

@@ -6,6 +6,7 @@ export interface SellerProps {
   email: string;
   phone: string;
   password: string;
+  passwordConfirmation?: string;
   avatarId?: UniqueEntityId;
 }
 
