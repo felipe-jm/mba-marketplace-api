@@ -14,6 +14,8 @@ import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/applicati
 import { StorageModule } from "../storage/storage.module";
 import { EditProductController } from "./controllers/edit-product.controller";
 import { EditProductUseCase } from "@/domain/marketplace/application/use-cases/edit-product-use-case";
+import { GetProductByIdController } from "./controllers/get-product-by-id.controller";
+import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-cases/get-product-by-id";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -24,6 +26,7 @@ import { EditProductUseCase } from "@/domain/marketplace/application/use-cases/e
     EditAccountController,
     UploadAttachmentController,
     EditProductController,
+    GetProductByIdController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -32,6 +35,7 @@ import { EditProductUseCase } from "@/domain/marketplace/application/use-cases/e
     EditSellerUseCase,
     UploadAndCreateAttachmentUseCase,
     EditProductUseCase,
+    GetProductByIdUseCase,
   ],
 })
 export class HttpModule {}

@@ -11,15 +11,21 @@ import {
 import { InMemoryCategoriesRepository } from "test/repositories/in-memory-categories-repository";
 import { makeCategory } from "test/factories/make-category";
 import { Slug } from "../../enterprise/entities/value-objects/slug";
+import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-repository";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
+let inMemorySellersRepository: InMemorySellersRepository;
 let sut: EditProductUseCase;
 
 describe("Edit Product", () => {
   beforeEach(() => {
-    inMemoryProductsRepository = new InMemoryProductsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository();
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
+    inMemoryProductsRepository = new InMemoryProductsRepository(
+      inMemorySellersRepository,
+      inMemoryCategoriesRepository
+    );
     sut = new EditProductUseCase(
       inMemoryProductsRepository,
       inMemoryCategoriesRepository
@@ -76,21 +82,13 @@ describe("Edit Product", () => {
   });
 
   it("should not be able to edit a product that does not exist.", async () => {
-    const category = makeCategory(
-      {
-        title: "Category 1",
-        slug: Slug.createFromText("category-1"),
-      },
-      new UniqueEntityId("category-1")
-    );
-
     const result = await sut.execute({
       productId: "product-2",
       title: "Nestjs Course",
       description: "Nestjs Course Description",
       priceInCents: 1234567891,
       ownerId: "owner-1",
-      categoryId: category.id.toString(),
+      categoryId: "category-1",
     });
 
     expect(result.isLeft()).toBe(true);
