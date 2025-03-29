@@ -1,10 +1,20 @@
 import { ProductsRepository } from "@/domain/marketplace/application/repositories/products-repository";
-import { Product } from "@/domain/marketplace/enterprise/entities/product";
+import {
+  Product,
+  ProductStatus,
+} from "@/domain/marketplace/enterprise/entities/product";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaProductMapper } from "../mappers/prisma-product-mapper";
 import { ProductDetails } from "@/domain/marketplace/enterprise/entities/value-objects/product-details";
 import { PrismaProductDetailsMapper } from "../mappers/prisma-product-details-mapper";
+import { PaginationParams } from "@/core/repositories/pagination-params";
+
+type FindManyParams = PaginationParams & {
+  status?: string;
+  title?: string;
+  description?: string;
+};
 
 @Injectable()
 export class PrismaProductsRepository implements ProductsRepository {
@@ -40,6 +50,34 @@ export class PrismaProductsRepository implements ProductsRepository {
     }
 
     return PrismaProductDetailsMapper.toDomain(product);
+  }
+
+  async findMany({
+    page,
+    status,
+    title,
+    description,
+  }: FindManyParams): Promise<Product[]> {
+    const products = await this.prisma.product.findMany({
+      skip: (page - 1) * 20,
+      take: 20,
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        status: status as ProductStatus,
+        title: {
+          contains: title,
+          mode: "insensitive",
+        },
+        description: {
+          contains: description,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    return products.map(PrismaProductMapper.toDomain);
   }
 
   async save(product: Product): Promise<void> {

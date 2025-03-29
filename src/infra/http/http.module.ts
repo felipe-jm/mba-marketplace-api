@@ -18,6 +18,8 @@ import { GetProductByIdController } from "./controllers/get-product-by-id.contro
 import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-cases/get-product-by-id";
 import { FetchCategoriesController } from "./controllers/fetch-categories.controller";
 import { FetchCategoriesUseCase } from "@/domain/marketplace/application/use-cases/fetch-categories-use-case";
+import { FetchProductsController } from "./controllers/fetch-products.controller";
+import { FetchProductsUseCase } from "@/domain/marketplace/application/use-cases/fetch-products-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -30,6 +32,7 @@ import { FetchCategoriesUseCase } from "@/domain/marketplace/application/use-cas
     EditProductController,
     GetProductByIdController,
     FetchCategoriesController,
+    FetchProductsController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -40,6 +43,7 @@ import { FetchCategoriesUseCase } from "@/domain/marketplace/application/use-cas
     EditProductUseCase,
     GetProductByIdUseCase,
     FetchCategoriesUseCase,
+    FetchProductsUseCase,
   ],
 })
 export class HttpModule {}

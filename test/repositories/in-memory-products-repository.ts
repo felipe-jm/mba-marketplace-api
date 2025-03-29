@@ -1,4 +1,7 @@
-import { ProductsRepository } from "@/domain/marketplace/application/repositories/products-repository";
+import {
+  FindManyParams,
+  ProductsRepository,
+} from "@/domain/marketplace/application/repositories/products-repository";
 import { Product } from "@/domain/marketplace/enterprise/entities/product";
 import { ProductDetails } from "@/domain/marketplace/enterprise/entities/value-objects/product-details";
 import { InMemorySellersRepository } from "./in-memory-sellers-repository";
@@ -58,6 +61,32 @@ export class InMemoryProductsRepository implements ProductsRepository {
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     });
+  }
+
+  findMany(params: FindManyParams): Promise<Product[]> {
+    const { title, status, description, page } = params;
+
+    const sortedItems = [...this.items];
+    sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    let products = sortedItems.slice((page - 1) * 20, page * 20);
+
+    if (status) {
+      products = products.filter((product) => product.status === status);
+    }
+
+    if (title) {
+      products = products.filter((product) =>
+        product.title.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+
+    if (description) {
+      products = products.filter((product) =>
+        product.description.toLowerCase().includes(description.toLowerCase())
+      );
+    }
+
+    return Promise.resolve(products);
   }
 
   async save(product: Product): Promise<void> {
