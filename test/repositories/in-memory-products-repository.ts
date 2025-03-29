@@ -1,7 +1,7 @@
 import { ProductsRepository } from "@/domain/marketplace/application/repositories/products-repository";
 import { Product } from "@/domain/marketplace/enterprise/entities/product";
 
-export class InMememoryProductsRepository implements ProductsRepository {
+export class InMemoryProductsRepository implements ProductsRepository {
   public items: Product[] = [];
 
   async findById(id: string): Promise<Product | null> {

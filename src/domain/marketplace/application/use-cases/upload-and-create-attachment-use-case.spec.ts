@@ -1,6 +1,6 @@
-import { UploadAndCreateAttachmentUseCase } from "./upload-and-create-attachment";
+import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/application/use-cases/upload-and-create-attachment-use-case";
 import { FakeUploader } from "test/storage/fake-uploader";
-import { InvalidAttachmentType } from "./errors/invalid-attachment-type";
+import { InvalidAttachmentType } from "@/domain/marketplace/application/use-cases/errors/invalid-attachment-type";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;

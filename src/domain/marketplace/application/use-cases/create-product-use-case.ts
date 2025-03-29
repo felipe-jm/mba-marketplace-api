@@ -1,8 +1,11 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
-import { Either, right } from "@/core/either";
+import { Either, left, right } from "@/core/either";
 import { Injectable } from "@nestjs/common";
 import { Product } from "../../enterprise/entities/product";
 import { ProductsRepository } from "../repositories/products-repository";
+import { CategoriesRepository } from "../repositories/categories-repository";
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { SellersRepository } from "@/domain/marketplace/application/repositories/sellers-repository";
 
 interface CreateProductUseCaseRequest {
   title: string;
@@ -13,7 +16,7 @@ interface CreateProductUseCaseRequest {
 }
 
 type CreateProductUseCaseResponse = Either<
-  null,
+  ResourceNotFoundError,
   {
     product: Product;
   }
@@ -21,7 +24,11 @@ type CreateProductUseCaseResponse = Either<
 
 @Injectable()
 export class CreateProductUseCase {
-  constructor(private readonly productsRepository: ProductsRepository) {}
+  constructor(
+    private readonly productsRepository: ProductsRepository,
+    private readonly categoriesRepository: CategoriesRepository,
+    private readonly sellersRepository: SellersRepository
+  ) {}
 
   async execute({
     title,
@@ -30,6 +37,18 @@ export class CreateProductUseCase {
     ownerId,
     categoryId,
   }: CreateProductUseCaseRequest): Promise<CreateProductUseCaseResponse> {
+    const owner = await this.sellersRepository.findById(ownerId);
+
+    if (!owner) {
+      return left(new ResourceNotFoundError());
+    }
+
+    const category = await this.categoriesRepository.findById(categoryId);
+
+    if (!category) {
+      return left(new ResourceNotFoundError());
+    }
+
     const product = Product.create({
       title,
       description,

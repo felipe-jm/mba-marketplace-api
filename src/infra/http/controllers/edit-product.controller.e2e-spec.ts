@@ -1,3 +1,4 @@
+import { ProductStatus } from "@/domain/marketplace/enterprise/entities/product";
 import { AppModule } from "@/infra/app.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication } from "@nestjs/common";
@@ -5,7 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 
-describe("Edit Account (E2E)", () => {
+describe("Edit Product (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let jwt: JwtService;
@@ -22,7 +23,7 @@ describe("Edit Account (E2E)", () => {
     await app.init();
   });
 
-  test("[PUT] /sellers/me", async () => {
+  test("[PUT] /products/:id", async () => {
     const user = await prisma.user.create({
       data: {
         name: "John Doe",
@@ -34,24 +35,41 @@ describe("Edit Account (E2E)", () => {
 
     const accessToken = jwt.sign({ sub: user.id });
 
+    const category = await prisma.category.create({
+      data: {
+        title: "Category 1",
+        slug: "category-1",
+      },
+    });
+
+    const product = await prisma.product.create({
+      data: {
+        title: "Nestjs Course",
+        description: "Nestjs Course Description",
+        priceInCents: 1234567890,
+        status: ProductStatus.AVAILABLE,
+        ownerId: user.id,
+        categoryId: category.id,
+      },
+    });
+
     const response = await request(app.getHttpServer())
-      .put("/sellers/me")
+      .put(`/products/${product.id}`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
-        name: "John Doe Edited",
-        email: "johndoeedited@example.com",
-        phone: "1234567891",
-        password: "1234567",
-        passwordConfirmation: "1234567",
+        title: "Nestjs Course Edited",
+        description: "Nestjs Course Description Edited",
+        priceInCents: 1234567891,
+        categoryId: category.id,
       });
 
     expect(response.statusCode).toBe(204);
 
-    const sellerOnDatabase = await prisma.user.findFirst({
+    const productOnDatabase = await prisma.product.findFirst({
       where: {
-        name: "John Doe Edited",
+        title: "Nestjs Course Edited",
       },
     });
-    expect(sellerOnDatabase).toBeTruthy();
+    expect(productOnDatabase).toBeTruthy();
   });
 });

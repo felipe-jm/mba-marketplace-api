@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+} from "@nestjs/common";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { CurrentUser } from "@/infra/auth/current-user-decorator";
 import { UserPayload } from "@/infra/auth/jwt.strategy";
@@ -23,19 +29,19 @@ export class CreateProductController {
   constructor(private readonly createProduct: CreateProductUseCase) {}
 
   @Post()
+  @HttpCode(201)
   async handle(
     @Body(bodyValidationPipe) body: CreateProductBodySchema,
     @CurrentUser() user: UserPayload
   ) {
     const { title, description, priceInCents, categoryId } = body;
-    const userId = user.sub;
 
     const result = await this.createProduct.execute({
       title,
       description,
       priceInCents,
       categoryId,
-      ownerId: userId,
+      ownerId: user.sub,
     });
 
     if (result.isLeft()) {

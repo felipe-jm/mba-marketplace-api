@@ -10,8 +10,10 @@ import { CryptographyModule } from "../cryptography/cryptography.module";
 import { EditAccountController } from "./controllers/edit-account.controller";
 import { EditSellerUseCase } from "@/domain/marketplace/application/use-cases/edit-seller-use-case";
 import { UploadAttachmentController } from "./controllers/upload-attachment.controller";
-import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/application/use-cases/upload-and-create-attachment";
+import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/application/use-cases/upload-and-create-attachment-use-case";
 import { StorageModule } from "../storage/storage.module";
+import { EditProductController } from "./controllers/edit-product.controller";
+import { EditProductUseCase } from "@/domain/marketplace/application/use-cases/edit-product-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -21,6 +23,7 @@ import { StorageModule } from "../storage/storage.module";
     CreateProductController,
     EditAccountController,
     UploadAttachmentController,
+    EditProductController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -28,6 +31,7 @@ import { StorageModule } from "../storage/storage.module";
     CreateProductUseCase,
     EditSellerUseCase,
     UploadAndCreateAttachmentUseCase,
+    EditProductUseCase,
   ],
 })
 export class HttpModule {}
