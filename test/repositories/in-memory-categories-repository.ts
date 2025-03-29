@@ -14,7 +14,7 @@ export class InMemoryCategoriesRepository implements CategoriesRepository {
     return category;
   }
 
-  async listAll(): Promise<Category[] | null> {
+  async listAll(): Promise<Category[]> {
     return this.items;
   }
 

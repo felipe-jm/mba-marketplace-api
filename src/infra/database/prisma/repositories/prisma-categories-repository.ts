@@ -22,8 +22,12 @@ export class PrismaCategoriesRepository implements CategoriesRepository {
     return PrismaCategoryMapper.toDomain(category);
   }
 
-  async listAll(): Promise<Category[] | null> {
+  async listAll(): Promise<Category[]> {
     const categories = await this.prisma.category.findMany();
+
+    if (!categories) {
+      return [];
+    }
 
     return categories.map(PrismaCategoryMapper.toDomain);
   }

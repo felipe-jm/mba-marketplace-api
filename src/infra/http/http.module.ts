@@ -16,6 +16,8 @@ import { EditProductController } from "./controllers/edit-product.controller";
 import { EditProductUseCase } from "@/domain/marketplace/application/use-cases/edit-product-use-case";
 import { GetProductByIdController } from "./controllers/get-product-by-id.controller";
 import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-cases/get-product-by-id";
+import { FetchCategoriesController } from "./controllers/fetch-categories.controller";
+import { FetchCategoriesUseCase } from "@/domain/marketplace/application/use-cases/fetch-categories-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -27,6 +29,7 @@ import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-case
     UploadAttachmentController,
     EditProductController,
     GetProductByIdController,
+    FetchCategoriesController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -36,6 +39,7 @@ import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-case
     UploadAndCreateAttachmentUseCase,
     EditProductUseCase,
     GetProductByIdUseCase,
+    FetchCategoriesUseCase,
   ],
 })
 export class HttpModule {}
