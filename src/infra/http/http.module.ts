@@ -26,6 +26,8 @@ import { ChangeProductStatusController } from "./controllers/change-product-stat
 import { ChangeProductStatusUseCase } from "@/domain/marketplace/application/use-cases/change-product-status-use-case";
 import { GetSellerProfileController } from "./controllers/get-seller-profile.controller";
 import { GetSellerProfileUseCase } from "@/domain/marketplace/application/use-cases/get-seller-profile-use-case";
+import { RegisterProductViewController } from "./controllers/register-product-view.controller";
+import { RegisterProductViewUseCase } from "@/domain/marketplace/application/use-cases/register-product-view-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -42,6 +44,7 @@ import { GetSellerProfileUseCase } from "@/domain/marketplace/application/use-ca
     FetchSellerProductsController,
     ChangeProductStatusController,
     GetSellerProfileController,
+    RegisterProductViewController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -56,6 +59,7 @@ import { GetSellerProfileUseCase } from "@/domain/marketplace/application/use-ca
     FetchProductsBySellerUseCase,
     ChangeProductStatusUseCase,
     GetSellerProfileUseCase,
+    RegisterProductViewUseCase,
   ],
 })
 export class HttpModule {}
