@@ -1,4 +1,5 @@
 import {
+  FindManyBySellerParams,
   FindManyParams,
   ProductsRepository,
 } from "@/domain/marketplace/application/repositories/products-repository";
@@ -64,7 +65,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
   }
 
   findMany(params: FindManyParams): Promise<Product[]> {
-    const { title, status, description, page } = params;
+    const { search, status, page } = params;
 
     const sortedItems = [...this.items];
     sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -74,17 +75,39 @@ export class InMemoryProductsRepository implements ProductsRepository {
       products = products.filter((product) => product.status === status);
     }
 
-    if (title) {
-      products = products.filter((product) =>
-        product.title.toLowerCase().includes(title.toLowerCase())
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(search.toLowerCase()) ||
+          product.description.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    if (description) {
-      products = products.filter((product) =>
-        product.description.toLowerCase().includes(description.toLowerCase())
+    return Promise.resolve(products);
+  }
+
+  findManyBySeller(params: FindManyBySellerParams): Promise<Product[]> {
+    const { search, status, page, sellerId } = params;
+
+    const sortedItems = [...this.items];
+    sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    let products = sortedItems.slice((page - 1) * 20, page * 20);
+
+    if (status) {
+      products = products.filter((product) => product.status === status);
+    }
+
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(search.toLowerCase()) ||
+          product.description.toLowerCase().includes(search.toLowerCase())
       );
     }
+
+    products = products.filter(
+      (product) => product.ownerId.toString() === sellerId
+    );
 
     return Promise.resolve(products);
   }

@@ -4,8 +4,13 @@ import { ProductDetails } from "../../enterprise/entities/value-objects/product-
 
 export interface FindManyParams extends PaginationParams {
   status?: string;
-  title?: string;
-  description?: string;
+  search?: string;
+}
+
+export interface FindManyBySellerParams extends PaginationParams {
+  status?: string;
+  search?: string;
+  sellerId: string;
 }
 
 export abstract class ProductsRepository {
@@ -14,4 +19,5 @@ export abstract class ProductsRepository {
   abstract save(product: Product): Promise<void>;
   abstract create(product: Product): Promise<void>;
   abstract findMany(params: FindManyParams): Promise<Product[]>;
+  abstract findManyBySeller(params: FindManyBySellerParams): Promise<Product[]>;
 }

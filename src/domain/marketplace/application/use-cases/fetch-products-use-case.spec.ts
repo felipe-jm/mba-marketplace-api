@@ -36,6 +36,27 @@ describe("Fetch Products Use Case", () => {
     expect(result.value?.products.length).toBe(2);
   });
 
+  it("should be able to fetch products by title", async () => {
+    const product = makeProduct({
+      title: "Test Product",
+    });
+
+    const product2 = makeProduct({
+      title: "Random",
+    });
+
+    await inMemoryProductRepository.create(product);
+    await inMemoryProductRepository.create(product2);
+
+    const result = await sut.execute({
+      page: 1,
+      search: "Test Product",
+    });
+
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.products.length).toBe(1);
+  });
+
   it("should be able to fetch products by description", async () => {
     const product = makeProduct({
       description: "Test Description",
@@ -50,7 +71,7 @@ describe("Fetch Products Use Case", () => {
 
     const result = await sut.execute({
       page: 1,
-      description: "Test Description",
+      search: "Test Description",
     });
 
     expect(result.isRight()).toBe(true);
@@ -77,26 +98,5 @@ describe("Fetch Products Use Case", () => {
     expect(result.isRight()).toBe(true);
     expect(result.value?.products.length).toBe(1);
     expect(result.value?.products[0].id).toBe(availableProduct.id);
-  });
-
-  it("should be able to fetch products by title", async () => {
-    const product = makeProduct({
-      title: "Test Product",
-    });
-
-    const product2 = makeProduct({
-      title: "Random",
-    });
-
-    await inMemoryProductRepository.create(product);
-    await inMemoryProductRepository.create(product2);
-
-    const result = await sut.execute({
-      page: 1,
-      title: "Test Product",
-    });
-
-    expect(result.isRight()).toBe(true);
-    expect(result.value?.products.length).toBe(1);
   });
 });

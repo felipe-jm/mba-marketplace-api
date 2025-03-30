@@ -9,17 +9,21 @@ export class PrismaSellersRepository implements SellersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Seller | null> {
-    const seller = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const seller = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    if (!seller) {
+      if (!seller) {
+        return null;
+      }
+
+      return PrismaSellerMapper.toDomain(seller);
+    } catch (error) {
       return null;
     }
-
-    return PrismaSellerMapper.toDomain(seller);
   }
 
   async findByEmail(email: string): Promise<Seller | null> {

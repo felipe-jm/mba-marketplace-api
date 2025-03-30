@@ -6,8 +6,7 @@ import { Product } from "../../enterprise/entities/product";
 interface FetchProductsUseCaseRequest {
   page: number;
   status?: string;
-  title?: string;
-  description?: string;
+  search?: string;
 }
 
 type FetchProductsUseCaseResponse = Either<
@@ -24,14 +23,12 @@ export class FetchProductsUseCase {
   async execute({
     page,
     status,
-    title,
-    description,
+    search,
   }: FetchProductsUseCaseRequest): Promise<FetchProductsUseCaseResponse> {
     const products = await this.productRepository.findMany({
       page,
       status,
-      title,
-      description,
+      search,
     });
 
     return right({ products });

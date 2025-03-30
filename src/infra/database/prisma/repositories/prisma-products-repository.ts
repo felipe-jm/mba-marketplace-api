@@ -12,8 +12,13 @@ import { PaginationParams } from "@/core/repositories/pagination-params";
 
 type FindManyParams = PaginationParams & {
   status?: string;
-  title?: string;
-  description?: string;
+  search?: string;
+};
+
+type FindManyBySellerParams = PaginationParams & {
+  status?: string;
+  search?: string;
+  sellerId: string;
 };
 
 @Injectable()
@@ -52,12 +57,7 @@ export class PrismaProductsRepository implements ProductsRepository {
     return PrismaProductDetailsMapper.toDomain(product);
   }
 
-  async findMany({
-    page,
-    status,
-    title,
-    description,
-  }: FindManyParams): Promise<Product[]> {
+  async findMany({ page, status, search }: FindManyParams): Promise<Product[]> {
     const products = await this.prisma.product.findMany({
       skip: (page - 1) * 20,
       take: 20,
@@ -65,15 +65,60 @@ export class PrismaProductsRepository implements ProductsRepository {
         createdAt: "desc",
       },
       where: {
-        status: status as ProductStatus,
-        title: {
-          contains: title,
-          mode: "insensitive",
-        },
-        description: {
-          contains: description,
-          mode: "insensitive",
-        },
+        status: status ? (status as ProductStatus) : undefined,
+        OR: search
+          ? [
+              {
+                title: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ]
+          : undefined,
+      },
+    });
+
+    return products.map(PrismaProductMapper.toDomain);
+  }
+
+  async findManyBySeller({
+    page,
+    status,
+    search,
+    sellerId,
+  }: FindManyBySellerParams): Promise<Product[]> {
+    const products = await this.prisma.product.findMany({
+      skip: (page - 1) * 20,
+      take: 20,
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        status: status ? (status as ProductStatus) : undefined,
+        OR: search
+          ? [
+              {
+                title: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ]
+          : undefined,
+        ownerId: sellerId,
       },
     });
 

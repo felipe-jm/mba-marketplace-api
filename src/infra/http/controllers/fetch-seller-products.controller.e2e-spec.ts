@@ -9,7 +9,7 @@ import request from "supertest";
 import { ProductFactory } from "test/factories/make-product";
 import { ProductStatus } from "@/domain/marketplace/enterprise/entities/product";
 
-describe("Fetch Products Controller", () => {
+describe("Fetch Seller Products Controller", () => {
   let app: INestApplication;
   let jwt: JwtService;
   let moduleRef: TestingModule;
@@ -32,7 +32,7 @@ describe("Fetch Products Controller", () => {
     await app.init();
   });
 
-  it("should be able to fetch products", async () => {
+  it("should be able to fetch products by seller", async () => {
     const user = await sellerFactory.makePrismaSeller({
       name: "John Doe",
     });
@@ -47,17 +47,17 @@ describe("Fetch Products Controller", () => {
       productFactory.makePrismaProduct({
         ownerId: user.id,
         categoryId: category.id,
-        title: "New Product 1",
+        title: "NestJS Course",
       }),
       productFactory.makePrismaProduct({
         ownerId: user.id,
         categoryId: category.id,
-        title: "New Product 2",
+        title: "React Course",
       }),
     ]);
 
     const response = await request(app.getHttpServer())
-      .get("/products")
+      .get("/seller/products")
       .set("Authorization", `Bearer ${accessToken}`)
       .query({ page: 1 });
 
@@ -65,7 +65,7 @@ describe("Fetch Products Controller", () => {
     expect(response.body.products.length).toBe(2);
   });
 
-  it("should be able to fetch products by title", async () => {
+  it("should be able to fetch products by seller and status", async () => {
     const user = await sellerFactory.makePrismaSeller({
       name: "John Doe",
     });
@@ -80,90 +80,88 @@ describe("Fetch Products Controller", () => {
       productFactory.makePrismaProduct({
         ownerId: user.id,
         categoryId: category.id,
-        title: "NestJS",
-      }),
-      productFactory.makePrismaProduct({
-        ownerId: user.id,
-        categoryId: category.id,
-        title: "React",
-      }),
-    ]);
-
-    const response = await request(app.getHttpServer())
-      .get("/products")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .query({ page: 1, search: "NestJS" });
-
-    expect(response.status).toBe(200);
-    expect(response.body.products.length).toBe(1);
-  });
-
-  it("should be able to fetch products by description", async () => {
-    const user = await sellerFactory.makePrismaSeller({
-      name: "John Doe",
-    });
-
-    const accessToken = jwt.sign({ sub: user.id.toString() });
-
-    const category = await categoryFactory.makePrismaCategory({
-      title: "Category",
-    });
-
-    await Promise.all([
-      productFactory.makePrismaProduct({
-        ownerId: user.id,
-        categoryId: category.id,
-        title: "NestJS",
-        description:
-          "NestJS is a framework for building server-side applications",
-      }),
-      productFactory.makePrismaProduct({
-        ownerId: user.id,
-        categoryId: category.id,
-        title: "React",
-        description: "Advanced React",
-      }),
-    ]);
-
-    const response = await request(app.getHttpServer())
-      .get("/products")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .query({ page: 1, search: "Advanced" });
-
-    expect(response.status).toBe(200);
-    expect(response.body.products.length).toBe(1);
-  });
-
-  it("should be able to fetch products by status", async () => {
-    const user = await sellerFactory.makePrismaSeller({
-      name: "John Doe",
-    });
-
-    const accessToken = jwt.sign({ sub: user.id.toString() });
-
-    const category = await categoryFactory.makePrismaCategory({
-      title: "Category",
-    });
-
-    await Promise.all([
-      productFactory.makePrismaProduct({
-        ownerId: user.id,
-        categoryId: category.id,
-        title: "New Product 1",
+        title: "NestJS Course",
         status: ProductStatus.CANCELLED,
       }),
       productFactory.makePrismaProduct({
         ownerId: user.id,
         categoryId: category.id,
-        title: "New Product 2",
+        title: "React Course",
         status: ProductStatus.SOLD,
       }),
     ]);
 
     const response = await request(app.getHttpServer())
-      .get("/products")
+      .get("/seller/products")
       .set("Authorization", `Bearer ${accessToken}`)
       .query({ page: 1, status: ProductStatus.CANCELLED });
+
+    expect(response.status).toBe(200);
+    expect(response.body.products.length).toBe(1);
+  });
+
+  it.only("should be able to fetch products by seller and title", async () => {
+    const user = await sellerFactory.makePrismaSeller({
+      name: "John Doe",
+    });
+
+    const accessToken = jwt.sign({ sub: user.id.toString() });
+
+    const category = await categoryFactory.makePrismaCategory({
+      title: "Category",
+    });
+
+    await Promise.all([
+      productFactory.makePrismaProduct({
+        ownerId: user.id,
+        categoryId: category.id,
+        title: "NestJS Course",
+      }),
+      productFactory.makePrismaProduct({
+        ownerId: user.id,
+        categoryId: category.id,
+        title: "React Course",
+      }),
+    ]);
+
+    const response = await request(app.getHttpServer())
+      .get("/seller/products")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .query({ page: 1, search: "React" });
+
+    expect(response.status).toBe(200);
+    expect(response.body.products.length).toBe(1);
+  });
+
+  it("should be able to fetch products by seller and description", async () => {
+    const user = await sellerFactory.makePrismaSeller({
+      name: "John Doe",
+    });
+
+    const accessToken = jwt.sign({ sub: user.id.toString() });
+
+    const category = await categoryFactory.makePrismaCategory({
+      title: "Category",
+    });
+
+    await Promise.all([
+      productFactory.makePrismaProduct({
+        ownerId: user.id,
+        categoryId: category.id,
+        title: "NestJS Course",
+      }),
+      productFactory.makePrismaProduct({
+        ownerId: user.id,
+        categoryId: category.id,
+        title: "React Course",
+        description: "React Course Description",
+      }),
+    ]);
+
+    const response = await request(app.getHttpServer())
+      .get("/seller/products")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .query({ page: 1, search: "React" });
 
     expect(response.status).toBe(200);
     expect(response.body.products.length).toBe(1);

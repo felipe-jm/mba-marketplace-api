@@ -33,7 +33,7 @@ describe("Get product by id controller (E2E)", () => {
     await app.init();
   });
 
-  test("[GET] /products/:id", async () => {
+  test("[GET] /products/:productId", async () => {
     const user = await sellerFactory.makePrismaSeller({
       name: "John Doe",
     });

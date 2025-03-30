@@ -2,12 +2,12 @@ import { Get, BadRequestException, Param, Controller } from "@nestjs/common";
 import { GetProductByIdUseCase } from "@/domain/marketplace/application/use-cases/get-product-by-id";
 import { ProductDetailsPresenter } from "@/infra/http/presenters/product-details-presenter";
 
-@Controller("/products/:id")
+@Controller("/products/:productId")
 export class GetProductByIdController {
   constructor(private readonly getProductById: GetProductByIdUseCase) {}
 
   @Get()
-  async handle(@Param("id") id: string) {
+  async handle(@Param("productId") id: string) {
     const result = await this.getProductById.execute({
       productId: id,
     });
