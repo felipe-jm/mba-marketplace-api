@@ -20,4 +20,6 @@ export abstract class ProductsRepository {
   abstract create(product: Product): Promise<void>;
   abstract findMany(params: FindManyParams): Promise<Product[]>;
   abstract findManyBySeller(params: FindManyBySellerParams): Promise<Product[]>;
+  abstract findManySoldInTheLast30Days(): Promise<number>;
+  abstract findManyAvailableInTheLast30Days(): Promise<number>;
 }

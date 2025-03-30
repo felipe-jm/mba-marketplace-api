@@ -141,4 +141,30 @@ export class PrismaProductsRepository implements ProductsRepository {
 
     await this.prisma.product.create({ data });
   }
+
+  async findManySoldInTheLast30Days(): Promise<number> {
+    const products = await this.prisma.product.findMany({
+      where: {
+        status: ProductStatus.SOLD,
+        createdAt: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+
+    return products.length;
+  }
+
+  async findManyAvailableInTheLast30Days(): Promise<number> {
+    const products = await this.prisma.product.findMany({
+      where: {
+        status: ProductStatus.AVAILABLE,
+        createdAt: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+
+    return products.length;
+  }
 }

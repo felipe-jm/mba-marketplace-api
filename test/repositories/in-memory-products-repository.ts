@@ -3,7 +3,10 @@ import {
   FindManyParams,
   ProductsRepository,
 } from "@/domain/marketplace/application/repositories/products-repository";
-import { Product } from "@/domain/marketplace/enterprise/entities/product";
+import {
+  Product,
+  ProductStatus,
+} from "@/domain/marketplace/enterprise/entities/product";
 import { ProductDetails } from "@/domain/marketplace/enterprise/entities/value-objects/product-details";
 import { InMemorySellersRepository } from "./in-memory-sellers-repository";
 import { InMemoryCategoriesRepository } from "./in-memory-categories-repository";
@@ -120,5 +123,21 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
   async create(product: Product): Promise<void> {
     this.items.push(product);
+  }
+
+  async findManySoldInTheLast30Days(): Promise<number> {
+    const products = this.items.filter(
+      (product) => product.status === ProductStatus.SOLD
+    );
+
+    return Promise.resolve(products.length);
+  }
+
+  async findManyAvailableInTheLast30Days(): Promise<number> {
+    const products = this.items.filter(
+      (product) => product.status === ProductStatus.AVAILABLE
+    );
+
+    return Promise.resolve(products.length);
   }
 }

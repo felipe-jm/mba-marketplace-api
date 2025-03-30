@@ -13,4 +13,13 @@ export class PrismaProductViewMapper {
       new UniqueEntityId(view.id)
     );
   }
+
+  static toPrisma(view: View): PrismaProductView {
+    return {
+      id: view.id.toString(),
+      productId: view.productId,
+      userId: view.userId,
+      createdAt: view.createdAt,
+    };
+  }
 }
