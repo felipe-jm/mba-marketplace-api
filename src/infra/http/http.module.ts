@@ -28,6 +28,16 @@ import { GetSellerProfileController } from "./controllers/get-seller-profile.con
 import { GetSellerProfileUseCase } from "@/domain/marketplace/application/use-cases/get-seller-profile-use-case";
 import { RegisterProductViewController } from "./controllers/register-product-view.controller";
 import { RegisterProductViewUseCase } from "@/domain/marketplace/application/use-cases/register-product-view-use-case";
+import { CountNumberOfViewsInTheLast30DaysController } from "./controllers/count-number-of-views-in-the-last-30-days.controller";
+import { CountNumberOfViewsInTheLast30DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-views-in-the-last-30-days-use-case";
+import { CountNumberOfProductsSoldInTheLast30DaysController } from "./controllers/count-number-of-products-sold-in-the-last-30-days.controller";
+import { CountNumberOfProductsSoldInTheLast30DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-products-sold-in-the-last-30-days-use-case";
+import { CountNumberOfProductsAvailableInTheLast30DaysController } from "./controllers/count-number-of-products-available-in-the-last-30-days.controller";
+import { CountNumberOfProductsAvailableInTheLast30DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-products-available-in-the-last-30-days-use-case";
+import { CountNumberOfViewsInTheLast30DaysByDayController } from "./controllers/count-number-of-views-in-the-last-30-days-by-day.controller";
+import { CountNumberOfViewsInTheLast30DaysByDayUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-views-in-the-last-30-days-by-day-use-case";
+import { CountNumberOfProductViewsInTheLast7DaysController } from "./controllers/count-number-of-product-views-in-the-last-7-days.controller";
+import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-product-views-in-the-last-7-days-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -45,6 +55,11 @@ import { RegisterProductViewUseCase } from "@/domain/marketplace/application/use
     ChangeProductStatusController,
     GetSellerProfileController,
     RegisterProductViewController,
+    CountNumberOfViewsInTheLast30DaysController,
+    CountNumberOfProductsSoldInTheLast30DaysController,
+    CountNumberOfProductsAvailableInTheLast30DaysController,
+    CountNumberOfViewsInTheLast30DaysByDayController,
+    CountNumberOfProductViewsInTheLast7DaysController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -60,6 +75,11 @@ import { RegisterProductViewUseCase } from "@/domain/marketplace/application/use
     ChangeProductStatusUseCase,
     GetSellerProfileUseCase,
     RegisterProductViewUseCase,
+    CountNumberOfViewsInTheLast30DaysUseCase,
+    CountNumberOfProductsSoldInTheLast30DaysUseCase,
+    CountNumberOfProductsAvailableInTheLast30DaysUseCase,
+    CountNumberOfViewsInTheLast30DaysByDayUseCase,
+    CountNumberOfProductViewsInTheLast7DaysUseCase,
   ],
 })
 export class HttpModule {}

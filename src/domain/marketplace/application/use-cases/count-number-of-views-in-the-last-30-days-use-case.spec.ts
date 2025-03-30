@@ -6,7 +6,7 @@ import { makeSeller } from "test/factories/make-seller";
 import { makeProduct } from "test/factories/make-product";
 import { makeView } from "test/factories/make-view";
 import { InMemoryViewsRepository } from "test/repositories/in-memory-views-repository";
-import { CountNumberOfViewsInTheLast30DaysUseCase } from "./countt-number-of-views-in-the-last-30-days-use-case";
+import { CountNumberOfViewsInTheLast30DaysUseCase } from "./count-number-of-views-in-the-last-30-days-use-case";
 
 describe("Count Number Of Views In The Last 30 Days", () => {
   let inMemorySellersRepository: InMemorySellersRepository;
