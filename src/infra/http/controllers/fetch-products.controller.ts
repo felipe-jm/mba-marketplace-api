@@ -9,6 +9,7 @@ import {
 import { ProductPresenter } from "../presenters/product-presenter";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { z } from "zod";
+import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
 const fetchProductsQueryParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -24,12 +25,58 @@ const fetchProductsValidationPipe = new ZodValidationPipe(
   fetchProductsQueryParamsSchema
 );
 
+// Swagger Response DTO
+class ProductResponseDTO {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  status: string;
+  sellerId: string;
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+class ProductsListResponseDTO {
+  products: ProductResponseDTO[];
+}
+
 @Controller("/products")
+@ApiTags("products")
 export class FetchProductsController {
   constructor(private readonly fetchProductsUseCase: FetchProductsUseCase) {}
 
   @Get()
   @UsePipes()
+  @ApiOperation({ summary: "Fetch products with optional filtering" })
+  @ApiQuery({
+    name: "page",
+    type: Number,
+    required: false,
+    description: "Page number, defaults to 1",
+  })
+  @ApiQuery({
+    name: "status",
+    type: String,
+    required: false,
+    description: "Product status filter",
+  })
+  @ApiQuery({
+    name: "search",
+    type: String,
+    required: false,
+    description: "Search term for products",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "List of products",
+    type: ProductsListResponseDTO,
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Bad request",
+  })
   async fetchProducts(
     @Query(fetchProductsValidationPipe) query: FetchProductsQueryParamsSchema
   ) {
