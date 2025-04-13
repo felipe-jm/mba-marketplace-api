@@ -19,6 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: Buffer.from(publicKey, "base64"),
       algorithms: ["RS256"],
+      // Set these to false to prevent passport from swallowing token errors
+      ignoreExpiration: false,
+      passReqToCallback: false,
     });
   }
 
