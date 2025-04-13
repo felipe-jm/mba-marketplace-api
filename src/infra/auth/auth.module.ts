@@ -20,7 +20,10 @@ import { EnvModule } from "../env/env.module";
         const publicKey = env.get("JWT_PUBLIC_KEY");
 
         return {
-          signOptions: { algorithm: "RS256" },
+          signOptions: {
+            algorithm: "RS256",
+            expiresIn: "15m", // Token de acesso com expiração curta
+          },
           privateKey: Buffer.from(privateKey, "base64"),
           publicKey: Buffer.from(publicKey, "base64"),
         };

@@ -38,6 +38,8 @@ import { CountNumberOfViewsInTheLast30DaysByDayController } from "./controllers/
 import { CountNumberOfViewsInTheLast30DaysByDayUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-views-in-the-last-30-days-by-day-use-case";
 import { CountNumberOfProductViewsInTheLast7DaysController } from "./controllers/count-number-of-product-views-in-the-last-7-days.controller";
 import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-product-views-in-the-last-7-days-use-case";
+import { RefreshTokenController } from "./controllers/refresh-token.controller";
+import { RefreshSellerTokenUseCase } from "@/domain/marketplace/application/use-cases/refresh-seller-token-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -60,6 +62,7 @@ import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "@/domain/marketp
     CountNumberOfProductsAvailableInTheLast30DaysController,
     CountNumberOfViewsInTheLast30DaysByDayController,
     CountNumberOfProductViewsInTheLast7DaysController,
+    RefreshTokenController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -80,6 +83,7 @@ import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "@/domain/marketp
     CountNumberOfProductsAvailableInTheLast30DaysUseCase,
     CountNumberOfViewsInTheLast30DaysByDayUseCase,
     CountNumberOfProductViewsInTheLast7DaysUseCase,
+    RefreshSellerTokenUseCase,
   ],
 })
 export class HttpModule {}

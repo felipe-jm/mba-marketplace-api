@@ -4,10 +4,14 @@ import { makeSeller } from "test/factories/make-seller";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { AuthenticateSellerUseCase } from "./authenticate-seller-use-case";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
+import { FakeRefreshTokenGenerator } from "test/cryptography/fake-refresh-token-generator";
+import { FakeTokenVerifier } from "test/cryptography/fake-token-verifier";
 
 let inMemorySellersRepository: InMemorySellersRepository;
 let fakeEncrypter: FakeEncrypter;
 let fakeHasher: FakeHasher;
+let fakeRefreshTokenGenerator: FakeRefreshTokenGenerator;
+let fakeTokenVerifier: FakeTokenVerifier;
 let sut: AuthenticateSellerUseCase;
 
 describe("Authenticate Seller", () => {
@@ -15,10 +19,13 @@ describe("Authenticate Seller", () => {
     inMemorySellersRepository = new InMemorySellersRepository();
     fakeEncrypter = new FakeEncrypter();
     fakeHasher = new FakeHasher();
+    fakeRefreshTokenGenerator = new FakeRefreshTokenGenerator();
+    fakeTokenVerifier = new FakeTokenVerifier();
     sut = new AuthenticateSellerUseCase(
       inMemorySellersRepository,
       fakeHasher,
-      fakeEncrypter
+      fakeEncrypter,
+      fakeRefreshTokenGenerator
     );
   });
 
@@ -38,6 +45,7 @@ describe("Authenticate Seller", () => {
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual({
       accessToken: expect.any(String),
+      refreshToken: expect.any(String),
     });
   });
 

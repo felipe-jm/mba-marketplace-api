@@ -2,10 +2,9 @@ import { AppModule } from "@/infra/app.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { hash } from "bcryptjs";
 import request from "supertest";
 
-describe("Authenticate (E2E)", () => {
+describe("Refresh Token (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -20,20 +19,33 @@ describe("Authenticate (E2E)", () => {
     await app.init();
   });
 
-  test("[POST] /sessions", async () => {
-    await prisma.user.create({
-      data: {
+  test("[POST] /sessions/refresh", async () => {
+    await request(app.getHttpServer())
+      .post("/sellers")
+      .send({
         name: "John Doe",
         email: "johndoe@example.com",
         phone: "1234567890",
-        password: await hash("123456", 8),
-      },
-    });
+        password: "123456",
+        passwordConfirmation: "123456",
+      })
+      .expect(201);
 
-    const response = await request(app.getHttpServer()).post("/sessions").send({
-      email: "johndoe@example.com",
-      password: "123456",
-    });
+    const sessionResponse = await request(app.getHttpServer())
+      .post("/sessions")
+      .send({
+        email: "johndoe@example.com",
+        password: "123456",
+      })
+      .expect(201);
+
+    const { refresh_token } = sessionResponse.body;
+
+    const response = await request(app.getHttpServer())
+      .post("/sessions/refresh")
+      .send({
+        refreshToken: refresh_token,
+      });
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toEqual({

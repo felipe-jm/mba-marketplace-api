@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { HashComparer } from "../cryptography/hash-comparer";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Encrypter } from "../cryptography/encrypter";
+import { RefreshTokenGenerator } from "../cryptography/refresh-token-generator";
 
 interface AuthenticateSellerUseCaseRequest {
   email: string;
@@ -14,6 +15,7 @@ type AuthenticateSellerUseCaseResponse = Either<
   WrongCredentialsError,
   {
     accessToken: string;
+    refreshToken: string;
   }
 >;
 
@@ -22,7 +24,8 @@ export class AuthenticateSellerUseCase {
   constructor(
     private readonly sellersRepository: SellersRepository,
     private readonly hashComparer: HashComparer,
-    private readonly encrypter: Encrypter
+    private readonly encrypter: Encrypter,
+    private readonly refreshTokenGenerator: RefreshTokenGenerator
   ) {}
 
   async execute({
@@ -44,12 +47,14 @@ export class AuthenticateSellerUseCase {
       return left(new WrongCredentialsError());
     }
 
-    const accessToken = await this.encrypter.encrypt({
-      sub: seller.id.toString(),
-    });
+    const payload = { sub: seller.id.toString() };
+
+    const accessToken = await this.encrypter.encrypt(payload);
+    const refreshToken = await this.refreshTokenGenerator.generate(payload);
 
     return right({
       accessToken,
+      refreshToken,
     });
   }
 }
