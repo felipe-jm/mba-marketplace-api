@@ -5,11 +5,13 @@ import { RefreshSellerTokenUseCase } from "./refresh-seller-token-use-case";
 import { FakeRefreshTokenGenerator } from "test/cryptography/fake-refresh-token-generator";
 import { FakeTokenVerifier } from "test/cryptography/fake-token-verifier";
 import { InvalidRefreshTokenError } from "./errors/invalid-refresh-token-error";
+import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-repository";
 
 let fakeEncrypter: FakeEncrypter;
 let fakeHasher: FakeHasher;
 let fakeRefreshTokenGenerator: FakeRefreshTokenGenerator;
 let fakeTokenVerifier: FakeTokenVerifier;
+let inMemorySellersRepository: InMemorySellersRepository;
 let sut: RefreshSellerTokenUseCase;
 
 describe("Refresh Seller Token", () => {
@@ -18,10 +20,12 @@ describe("Refresh Seller Token", () => {
     fakeHasher = new FakeHasher();
     fakeRefreshTokenGenerator = new FakeRefreshTokenGenerator();
     fakeTokenVerifier = new FakeTokenVerifier();
+    inMemorySellersRepository = new InMemorySellersRepository();
     sut = new RefreshSellerTokenUseCase(
       fakeEncrypter,
       fakeRefreshTokenGenerator,
-      fakeTokenVerifier
+      fakeTokenVerifier,
+      inMemorySellersRepository
     );
   });
 
@@ -30,6 +34,8 @@ describe("Refresh Seller Token", () => {
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
     });
+
+    inMemorySellersRepository.items.push(seller);
 
     const refreshToken = await fakeRefreshTokenGenerator.generate({
       sub: seller.id.toString(),
@@ -43,6 +49,12 @@ describe("Refresh Seller Token", () => {
     expect(result.value).toEqual({
       accessToken: expect.any(String),
       refreshToken: expect.any(String),
+      seller: {
+        id: seller.id.toString(),
+        name: seller.name,
+        email: seller.email,
+        phone: seller.phone,
+      },
     });
   });
 

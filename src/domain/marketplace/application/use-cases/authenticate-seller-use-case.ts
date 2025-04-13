@@ -5,6 +5,7 @@ import { HashComparer } from "../cryptography/hash-comparer";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Encrypter } from "../cryptography/encrypter";
 import { RefreshTokenGenerator } from "../cryptography/refresh-token-generator";
+import { SellerPresenter } from "@/infra/http/presenters/seller-presenter";
 
 interface AuthenticateSellerUseCaseRequest {
   email: string;
@@ -16,6 +17,12 @@ type AuthenticateSellerUseCaseResponse = Either<
   {
     accessToken: string;
     refreshToken: string;
+    seller: {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+    };
   }
 >;
 
@@ -55,6 +62,7 @@ export class AuthenticateSellerUseCase {
     return right({
       accessToken,
       refreshToken,
+      seller: SellerPresenter.toHTTP(seller),
     });
   }
 }

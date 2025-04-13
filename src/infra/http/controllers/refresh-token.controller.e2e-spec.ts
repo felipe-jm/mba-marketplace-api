@@ -51,6 +51,12 @@ describe("Refresh Token (E2E)", () => {
     expect(response.body).toEqual({
       access_token: expect.any(String),
       refresh_token: expect.any(String),
+      seller: {
+        id: expect.any(String),
+        name: "John Doe",
+        email: "johndoe@example.com",
+        phone: "1234567890",
+      },
     });
   });
 });

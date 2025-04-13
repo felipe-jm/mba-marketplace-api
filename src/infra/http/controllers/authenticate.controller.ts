@@ -25,9 +25,17 @@ class AuthenticateDTO {
 }
 
 // Swagger Response DTO
+class SellerDTO {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
 class AuthTokenResponseDTO {
   access_token: string;
   refresh_token: string;
+  seller: SellerDTO;
 }
 
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>;
@@ -70,11 +78,12 @@ export class AuthenticateController {
       }
     }
 
-    const { accessToken, refreshToken } = result.value;
+    const { accessToken, refreshToken, seller } = result.value;
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
+      seller,
     };
   }
 }

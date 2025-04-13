@@ -4,6 +4,8 @@ import { Encrypter } from "../cryptography/encrypter";
 import { RefreshTokenGenerator } from "../cryptography/refresh-token-generator";
 import { TokenVerifier } from "../cryptography/token-verifier";
 import { InvalidRefreshTokenError } from "./errors/invalid-refresh-token-error";
+import { SellersRepository } from "../repositories/sellers-repository";
+import { SellerPresenter } from "@/infra/http/presenters/seller-presenter";
 
 interface TokenPayload {
   sub: string;
@@ -21,6 +23,12 @@ type RefreshSellerTokenUseCaseResponse = Either<
   {
     accessToken: string;
     refreshToken: string;
+    seller: {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+    };
   }
 >;
 
@@ -29,7 +37,8 @@ export class RefreshSellerTokenUseCase {
   constructor(
     private readonly encrypter: Encrypter,
     private readonly refreshTokenGenerator: RefreshTokenGenerator,
-    private readonly tokenVerifier: TokenVerifier
+    private readonly tokenVerifier: TokenVerifier,
+    private readonly sellersRepository: SellersRepository
   ) {}
 
   async execute({
@@ -52,6 +61,13 @@ export class RefreshSellerTokenUseCase {
 
       const sellerId = payload.sub;
 
+      // Buscar dados do vendedor
+      const seller = await this.sellersRepository.findById(sellerId);
+
+      if (!seller) {
+        return left(new InvalidRefreshTokenError());
+      }
+
       // Token validado, gerar novos tokens
       const tokenPayload = { sub: sellerId };
 
@@ -63,6 +79,7 @@ export class RefreshSellerTokenUseCase {
       return right({
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
+        seller: SellerPresenter.toHTTP(seller),
       });
     } catch (error) {
       // Qualquer erro de verificação do JWT (expiração, assinatura inválida, etc) cairá aqui

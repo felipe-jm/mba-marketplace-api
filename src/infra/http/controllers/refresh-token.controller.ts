@@ -22,9 +22,17 @@ class RefreshTokenDTO {
   refreshToken: string;
 }
 
+class SellerDTO {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
 class TokenResponseDTO {
   access_token: string;
   refresh_token: string;
+  seller: SellerDTO;
 }
 
 @Controller("/sessions/refresh")
@@ -61,11 +69,12 @@ export class RefreshTokenController {
       throw new BadRequestException(error.message);
     }
 
-    const { accessToken, refreshToken: newRefreshToken } = result.value;
+    const { accessToken, refreshToken: newRefreshToken, seller } = result.value;
 
     return {
       access_token: accessToken,
       refresh_token: newRefreshToken,
+      seller,
     };
   }
 }

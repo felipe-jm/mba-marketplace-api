@@ -46,6 +46,12 @@ describe("Authenticate Seller", () => {
     expect(result.value).toEqual({
       accessToken: expect.any(String),
       refreshToken: expect.any(String),
+      seller: {
+        id: seller.id.toString(),
+        name: seller.name,
+        email: seller.email,
+        phone: seller.phone,
+      },
     });
   });
 
