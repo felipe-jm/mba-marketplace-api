@@ -6,7 +6,9 @@ import { makeSeller } from "test/factories/make-seller";
 import { makeProduct } from "test/factories/make-product";
 import { InMemoryCategoriesRepository } from "test/repositories/in-memory-categories-repository";
 import { makeCategory } from "test/factories/make-category";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
@@ -14,11 +16,15 @@ let sut: GetProductByIdUseCase;
 
 describe("Get Product By Id", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
 
     sut = new GetProductByIdUseCase(inMemoryProductsRepository);

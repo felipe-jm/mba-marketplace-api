@@ -9,7 +9,9 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OwnerViewingOwnProductError } from "./errors/owner-viewing-own-product-error";
 import { InMemoryViewsRepository } from "test/repositories/in-memory-views-repository";
 import { ProductViewAlreadyExistsError } from "./errors/product-view-already-exists";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
@@ -18,12 +20,16 @@ let sut: RegisterProductViewUseCase;
 
 describe("Register Product View", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryViewsRepository = new InMemoryViewsRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
 
     sut = new RegisterProductViewUseCase(

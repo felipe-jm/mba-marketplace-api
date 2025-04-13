@@ -6,11 +6,14 @@ import { FakeRefreshTokenGenerator } from "test/cryptography/fake-refresh-token-
 import { FakeTokenVerifier } from "test/cryptography/fake-token-verifier";
 import { InvalidRefreshTokenError } from "./errors/invalid-refresh-token-error";
 import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-repository";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 let fakeEncrypter: FakeEncrypter;
 let fakeHasher: FakeHasher;
 let fakeRefreshTokenGenerator: FakeRefreshTokenGenerator;
 let fakeTokenVerifier: FakeTokenVerifier;
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let sut: RefreshSellerTokenUseCase;
 
@@ -20,7 +23,10 @@ describe("Refresh Seller Token", () => {
     fakeHasher = new FakeHasher();
     fakeRefreshTokenGenerator = new FakeRefreshTokenGenerator();
     fakeTokenVerifier = new FakeTokenVerifier();
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     sut = new RefreshSellerTokenUseCase(
       fakeEncrypter,
       fakeRefreshTokenGenerator,
@@ -49,12 +55,7 @@ describe("Refresh Seller Token", () => {
     expect(result.value).toEqual({
       accessToken: expect.any(String),
       refreshToken: expect.any(String),
-      seller: {
-        id: seller.id.toString(),
-        name: seller.name,
-        email: seller.email,
-        phone: seller.phone,
-      },
+      seller,
     });
   });
 

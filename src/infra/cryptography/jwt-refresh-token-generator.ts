@@ -13,7 +13,7 @@ export class JwtRefreshTokenGenerator implements RefreshTokenGenerator {
         refreshToken: true,
       },
       {
-        expiresIn: "5m", // Refresh token with longer expiration
+        expiresIn: "1d", // Refresh token with longer expiration
       }
     );
   }

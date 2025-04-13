@@ -10,7 +10,9 @@ interface GetSellerProfileUseCaseRequest {
 
 type GetSellerProfileUseCaseResponse = Either<
   ResourceNotFoundError,
-  { seller: Seller }
+  {
+    seller: Seller;
+  }
 >;
 
 @Injectable()

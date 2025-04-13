@@ -5,7 +5,7 @@ import { RefreshTokenGenerator } from "../cryptography/refresh-token-generator";
 import { TokenVerifier } from "../cryptography/token-verifier";
 import { InvalidRefreshTokenError } from "./errors/invalid-refresh-token-error";
 import { SellersRepository } from "../repositories/sellers-repository";
-import { SellerPresenter } from "@/infra/http/presenters/seller-presenter";
+import { Seller } from "../../enterprise/entities/seller";
 
 interface TokenPayload {
   sub: string;
@@ -23,12 +23,7 @@ type RefreshSellerTokenUseCaseResponse = Either<
   {
     accessToken: string;
     refreshToken: string;
-    seller: {
-      id: string;
-      name: string;
-      email: string;
-      phone: string;
-    };
+    seller: Seller;
   }
 >;
 
@@ -79,7 +74,7 @@ export class RefreshSellerTokenUseCase {
       return right({
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-        seller: SellerPresenter.toHTTP(seller),
+        seller,
       });
     } catch (error) {
       // Qualquer erro de verificação do JWT (expiração, assinatura inválida, etc) cairá aqui

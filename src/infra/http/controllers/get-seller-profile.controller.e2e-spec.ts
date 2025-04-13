@@ -44,6 +44,7 @@ describe("Get seller profile controller (E2E)", () => {
       name: "John Doe",
       email: "john.doe@example.com",
       phone: "1234567890",
+      avatarUrl: null,
     });
   });
 });

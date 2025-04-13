@@ -1,5 +1,6 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { Attachment } from "@/domain/marketplace/enterprise/entities/attachment";
 
 export interface SellerProps {
   name: string;
@@ -8,6 +9,7 @@ export interface SellerProps {
   password: string;
   passwordConfirmation?: string;
   avatarId?: UniqueEntityId;
+  avatar?: Attachment;
 }
 
 export class Seller extends Entity<SellerProps> {
@@ -31,6 +33,10 @@ export class Seller extends Entity<SellerProps> {
     return this.props.avatarId;
   }
 
+  get avatar() {
+    return this.props.avatar;
+  }
+
   set name(name: string) {
     this.props.name = name;
   }
@@ -52,6 +58,13 @@ export class Seller extends Entity<SellerProps> {
       return;
     }
     this.props.avatarId = avatarId;
+  }
+
+  set avatar(avatar: Attachment | undefined) {
+    if (avatar === undefined) {
+      return;
+    }
+    this.props.avatar = avatar;
   }
 
   static create(props: SellerProps, id?: UniqueEntityId) {

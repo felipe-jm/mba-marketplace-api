@@ -7,8 +7,10 @@ import { makeProduct } from "test/factories/make-product";
 import { makeView } from "test/factories/make-view";
 import { InMemoryViewsRepository } from "test/repositories/in-memory-views-repository";
 import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "./count-number-of-product-views-in-the-last-7-days-use-case";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 describe("Get Number Of Product Views In The Last 7 Days", () => {
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
   let inMemorySellersRepository: InMemorySellersRepository;
   let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
   let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -16,11 +18,15 @@ describe("Get Number Of Product Views In The Last 7 Days", () => {
   let sut: CountNumberOfProductViewsInTheLast7DaysUseCase;
 
   beforeAll(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
     inMemoryViewsRepository = new InMemoryViewsRepository();
   });

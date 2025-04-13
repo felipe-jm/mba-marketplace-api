@@ -9,21 +9,26 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { ProductWithSameStatusError } from "./errors/product-with-same-status-error";
 import { ProductAlreadySoldError } from "./errors/product-already-sold-error";
 import { ProductAlreadyCancelledError } from "./errors/product-already-cancelled-error";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 describe("Change Product Status Use Case", () => {
   let inMemoryProductsRepository: InMemoryProductsRepository;
   let inMemorySellersRepository: InMemorySellersRepository;
   let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
-
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
   let sut: ChangeProductStatusUseCase;
 
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
 
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
 
     sut = new ChangeProductStatusUseCase(inMemoryProductsRepository);

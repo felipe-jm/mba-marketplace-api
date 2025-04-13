@@ -23,7 +23,7 @@ import { EnvModule } from "../env/env.module";
         return {
           signOptions: {
             algorithm: "RS256",
-            expiresIn: "1m", // Token de acesso com expiração curta
+            expiresIn: "15m", // Token de acesso com expiração curta
           },
           privateKey: Buffer.from(privateKey, "base64"),
           publicKey: Buffer.from(publicKey, "base64"),

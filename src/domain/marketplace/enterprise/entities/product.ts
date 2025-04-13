@@ -1,7 +1,8 @@
+import dayjs from "dayjs";
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
-import dayjs from "dayjs";
+import { Attachment } from "./attachment";
 
 export enum ProductStatus {
   AVAILABLE = "available",
@@ -18,6 +19,8 @@ export interface ProductProps {
   categoryId: UniqueEntityId;
   createdAt: Date;
   updatedAt?: Date | null;
+  attachmentId?: UniqueEntityId;
+  attachment?: Attachment;
 }
 
 export class Product extends Entity<ProductProps> {
@@ -43,6 +46,14 @@ export class Product extends Entity<ProductProps> {
 
   get categoryId() {
     return this.props.categoryId;
+  }
+
+  get attachmentId() {
+    return this.props.attachmentId;
+  }
+
+  get attachment() {
+    return this.props.attachment;
   }
 
   get createdAt() {
@@ -85,6 +96,20 @@ export class Product extends Entity<ProductProps> {
 
   set categoryId(category: UniqueEntityId) {
     this.props.categoryId = category;
+  }
+
+  set attachmentId(attachmentId: UniqueEntityId | undefined) {
+    if (attachmentId === undefined) {
+      return;
+    }
+    this.props.attachmentId = attachmentId;
+  }
+
+  set attachment(attachment: Attachment | undefined) {
+    if (attachment === undefined) {
+      return;
+    }
+    this.props.attachment = attachment;
   }
 
   static create(

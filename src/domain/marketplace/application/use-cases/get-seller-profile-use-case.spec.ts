@@ -2,12 +2,18 @@ import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-r
 import { GetSellerProfileUseCase } from "./get-seller-profile-use-case";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { makeSeller } from "test/factories/make-seller";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let sut: GetSellerProfileUseCase;
 
 describe("Get Seller Profile", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     sut = new GetSellerProfileUseCase(inMemorySellersRepository);
   });
 

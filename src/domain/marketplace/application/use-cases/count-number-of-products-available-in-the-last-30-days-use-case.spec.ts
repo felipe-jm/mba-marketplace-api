@@ -6,19 +6,25 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { makeSeller } from "test/factories/make-seller";
 import { ProductStatus } from "../../enterprise/entities/product";
 import { makeProduct } from "test/factories/make-product";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 describe("Get Number Of Products Available In The Last 30 Days", () => {
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
   let inMemorySellersRepository: InMemorySellersRepository;
   let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
   let inMemoryProductsRepository: InMemoryProductsRepository;
   let sut: CountNumberOfProductsAvailableInTheLast30DaysUseCase;
 
   beforeAll(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
   });
 

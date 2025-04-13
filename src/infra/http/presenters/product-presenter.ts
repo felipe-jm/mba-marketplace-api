@@ -10,6 +10,7 @@ export class ProductPresenter {
       status: product.status,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
+      attachmentUrl: product.attachment?.url,
     };
   }
 }

@@ -30,6 +30,11 @@ export class PrismaProductsRepository implements ProductsRepository {
       where: {
         id,
       },
+      include: {
+        attachment: true,
+        owner: true,
+        category: true,
+      },
     });
 
     if (!product) {
@@ -47,6 +52,7 @@ export class PrismaProductsRepository implements ProductsRepository {
       include: {
         category: true,
         owner: true,
+        attachment: true,
       },
     });
 
@@ -82,6 +88,9 @@ export class PrismaProductsRepository implements ProductsRepository {
               },
             ]
           : undefined,
+      },
+      include: {
+        attachment: true,
       },
     });
 
@@ -119,6 +128,9 @@ export class PrismaProductsRepository implements ProductsRepository {
             ]
           : undefined,
         ownerId: sellerId,
+      },
+      include: {
+        attachment: true,
       },
     });
 

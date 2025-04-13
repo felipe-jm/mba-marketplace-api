@@ -14,6 +14,9 @@ export class PrismaSellersRepository implements SellersRepository {
         where: {
           id,
         },
+        include: {
+          avatar: true,
+        },
       });
 
       if (!seller) {
@@ -31,6 +34,9 @@ export class PrismaSellersRepository implements SellersRepository {
       where: {
         email,
       },
+      include: {
+        avatar: true,
+      },
     });
 
     if (!seller) {
@@ -44,6 +50,9 @@ export class PrismaSellersRepository implements SellersRepository {
     const seller = await this.prisma.user.findUnique({
       where: {
         phone,
+      },
+      include: {
+        avatar: true,
       },
     });
 

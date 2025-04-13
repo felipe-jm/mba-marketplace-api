@@ -13,9 +13,9 @@ interface EditSellerUseCaseRequest {
   name: string;
   email: string;
   phone: string;
-  password: string;
-  passwordConfirmation: string;
-  avatarId?: UniqueEntityId;
+  password?: string;
+  passwordConfirmation?: string;
+  avatarId?: string;
 }
 
 type EditSellerUseCaseResponse = Either<
@@ -63,13 +63,15 @@ export class EditSellerUseCase {
       return left(new SellerAlreadyExistsError());
     }
 
-    const hashPassword = await this.hashGenerator.hash(password);
+    if (password) {
+      const hashPassword = await this.hashGenerator.hash(password);
+      seller.password = hashPassword;
+    }
 
     seller.name = name;
     seller.email = email;
     seller.phone = phone;
-    seller.password = hashPassword;
-    seller.avatarId = avatarId;
+    seller.avatarId = avatarId ? new UniqueEntityId(avatarId) : undefined;
 
     await this.sellersRepository.save(seller);
 

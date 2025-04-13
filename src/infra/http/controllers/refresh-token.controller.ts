@@ -11,6 +11,7 @@ import { RefreshSellerTokenUseCase } from "@/domain/marketplace/application/use-
 import { InvalidRefreshTokenError } from "@/domain/marketplace/application/use-cases/errors/invalid-refresh-token-error";
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from "@nestjs/swagger";
 import { Public } from "@/infra/auth/public";
+import { SellerPresenter } from "../presenters/seller-presenter";
 
 const refreshTokenBodySchema = z.object({
   refreshToken: z.string(),
@@ -74,7 +75,7 @@ export class RefreshTokenController {
     return {
       access_token: accessToken,
       refresh_token: newRefreshToken,
-      seller,
+      seller: SellerPresenter.toHTTP(seller),
     };
   }
 }

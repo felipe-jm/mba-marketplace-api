@@ -6,7 +6,10 @@ import { AuthenticateSellerUseCase } from "./authenticate-seller-use-case";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { FakeRefreshTokenGenerator } from "test/cryptography/fake-refresh-token-generator";
 import { FakeTokenVerifier } from "test/cryptography/fake-token-verifier";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let fakeEncrypter: FakeEncrypter;
 let fakeHasher: FakeHasher;
@@ -16,7 +19,10 @@ let sut: AuthenticateSellerUseCase;
 
 describe("Authenticate Seller", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     fakeEncrypter = new FakeEncrypter();
     fakeHasher = new FakeHasher();
     fakeRefreshTokenGenerator = new FakeRefreshTokenGenerator();
@@ -46,12 +52,7 @@ describe("Authenticate Seller", () => {
     expect(result.value).toEqual({
       accessToken: expect.any(String),
       refreshToken: expect.any(String),
-      seller: {
-        id: seller.id.toString(),
-        name: seller.name,
-        email: seller.email,
-        phone: seller.phone,
-      },
+      seller,
     });
   });
 

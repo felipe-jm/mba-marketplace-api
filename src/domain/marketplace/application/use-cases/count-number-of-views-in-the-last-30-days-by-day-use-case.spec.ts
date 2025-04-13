@@ -7,8 +7,10 @@ import { makeProduct } from "test/factories/make-product";
 import { makeView } from "test/factories/make-view";
 import { InMemoryViewsRepository } from "test/repositories/in-memory-views-repository";
 import { CountNumberOfViewsInTheLast30DaysByDayUseCase } from "./count-number-of-views-in-the-last-30-days-by-day-use-case";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 describe("Get Number Of Products Views In The Last 30 Days By Day", () => {
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
   let inMemorySellersRepository: InMemorySellersRepository;
   let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
   let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -16,11 +18,15 @@ describe("Get Number Of Products Views In The Last 30 Days By Day", () => {
   let sut: CountNumberOfViewsInTheLast30DaysByDayUseCase;
 
   beforeAll(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
     inMemoryViewsRepository = new InMemoryViewsRepository();
   });

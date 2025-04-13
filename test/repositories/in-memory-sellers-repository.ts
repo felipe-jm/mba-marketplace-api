@@ -1,7 +1,12 @@
 import { SellersRepository } from "@/domain/marketplace/application/repositories/sellers-repository";
 import { Seller } from "@/domain/marketplace/enterprise/entities/seller";
+import { InMemoryAttachmentsRepository } from "./in-memory-attachments-repository";
 
 export class InMemorySellersRepository implements SellersRepository {
+  constructor(
+    private readonly attachmentsRepository: InMemoryAttachmentsRepository
+  ) {}
+
   public items: Seller[] = [];
 
   async findById(id: string): Promise<Seller | null> {
@@ -9,6 +14,16 @@ export class InMemorySellersRepository implements SellersRepository {
 
     if (!seller) {
       return null;
+    }
+
+    if (seller.avatarId) {
+      const attachment = await this.attachmentsRepository.findById(
+        seller.avatarId.toString()
+      );
+
+      if (attachment) {
+        seller.avatar = attachment;
+      }
     }
 
     return seller;

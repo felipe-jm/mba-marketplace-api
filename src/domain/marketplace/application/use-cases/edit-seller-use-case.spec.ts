@@ -6,14 +6,19 @@ import { SellerAlreadyExistsError } from "./errors/seller-already-exists-error";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { SellerNotFoundError } from "./errors/seller-not-found-error";
 import { PasswordDoesNotMatchError } from "./errors/password-does-not-match-error";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
 let fakeHasher: FakeHasher;
 let sut: EditSellerUseCase;
 
 describe("Edit Seller", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     fakeHasher = new FakeHasher();
     sut = new EditSellerUseCase(inMemorySellersRepository, fakeHasher);
   });

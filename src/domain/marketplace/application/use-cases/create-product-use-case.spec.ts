@@ -7,7 +7,9 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { makeCategory } from "test/factories/make-category";
 import { Slug } from "@/domain/marketplace/enterprise/entities/value-objects/slug";
 import { makeSeller } from "test/factories/make-seller";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
@@ -15,11 +17,15 @@ let sut: CreateProductUseCase;
 
 describe("Create Product", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
     sut = new CreateProductUseCase(
       inMemoryProductsRepository,

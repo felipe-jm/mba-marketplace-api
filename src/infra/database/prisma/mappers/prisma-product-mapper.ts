@@ -1,12 +1,24 @@
-import { Product as PrismaProduct, Prisma } from "@prisma/client";
+import {
+  Product as PrismaProduct,
+  Prisma,
+  Attachment as PrismaAttachment,
+  User as PrismaSeller,
+  Category as PrismaCategory,
+} from "@prisma/client";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import {
   Product,
   ProductStatus,
 } from "@/domain/marketplace/enterprise/entities/product";
 
+type PrismaProductDetails = PrismaProduct & {
+  owner: PrismaSeller;
+  category: PrismaCategory | null;
+  attachment: PrismaAttachment | null;
+};
+
 export class PrismaProductMapper {
-  static toDomain(raw: PrismaProduct): Product {
+  static toDomain(raw: PrismaProductDetails): Product {
     return Product.create(
       {
         title: raw.title,

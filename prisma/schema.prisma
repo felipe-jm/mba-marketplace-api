@@ -8,13 +8,17 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  name        String
-  email       String        @unique
-  phone       String        @unique
-  password    String
-  products    Product[]
-  ProductView ProductView[]
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  phone    String @unique
+  password String
+
+  avatarId String?     @map("avatar_id")
+  avatar   Attachment? @relation(fields: [avatarId], references: [id])
+
+  products      Product[]
+  product_views ProductView[]
 
   @@map("users")
 }
@@ -34,11 +38,13 @@ model Product {
   updatedAt    DateTime?     @updatedAt @map("updated_at")
   status       ProductStatus
 
-  ownerId    String @map("owner_id")
-  categoryId String @map("category_id")
+  ownerId      String  @map("owner_id")
+  categoryId   String  @map("category_id")
+  attachmentId String? @map("attachment_id")
 
   owner         User          @relation(fields: [ownerId], references: [id])
   category      Category?     @relation(fields: [categoryId], references: [id])
+  attachment    Attachment?   @relation(fields: [attachmentId], references: [id])
   product_views ProductView[]
 
   @@map("products")
@@ -48,6 +54,9 @@ model Attachment {
   id    String @id @default(uuid())
   title String
   url   String
+
+  users    User[]
+  products Product[]
 
   @@map("attachments")
 }

@@ -4,20 +4,26 @@ import { FetchProductsUseCase } from "./fetch-products-use-case";
 import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-repository";
 import { InMemoryCategoriesRepository } from "test/repositories/in-memory-categories-repository";
 import { ProductStatus } from "../../enterprise/entities/product";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
 describe("Fetch Products Use Case", () => {
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
   let inMemoryProductRepository: InMemoryProductsRepository;
   let inMemorySellersRepository: InMemorySellersRepository;
   let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
   let sut: FetchProductsUseCase;
 
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
 
     inMemoryProductRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
 
     sut = new FetchProductsUseCase(inMemoryProductRepository);

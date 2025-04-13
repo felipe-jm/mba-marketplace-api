@@ -7,6 +7,7 @@ export class SellerPresenter {
       name: seller.name,
       email: seller.email,
       phone: seller.phone,
+      avatarUrl: seller.avatar?.url || null,
     };
   }
 }

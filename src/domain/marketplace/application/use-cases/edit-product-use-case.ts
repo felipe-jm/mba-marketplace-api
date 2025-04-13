@@ -14,6 +14,7 @@ interface EditProductUseCaseRequest {
   priceInCents: number;
   ownerId: string;
   categoryId: string;
+  attachmentId?: string;
 }
 
 type EditProductUseCaseResponse = Either<
@@ -37,6 +38,7 @@ export class EditProductUseCase {
     priceInCents,
     ownerId,
     categoryId,
+    attachmentId,
   }: EditProductUseCaseRequest): Promise<EditProductUseCaseResponse> {
     const product = await this.productsRepository.findById(productId);
 
@@ -64,6 +66,9 @@ export class EditProductUseCase {
     product.description = description;
     product.priceInCents = priceInCents;
     product.categoryId = new UniqueEntityId(categoryId);
+    product.attachmentId = attachmentId
+      ? new UniqueEntityId(attachmentId)
+      : undefined;
 
     await this.productsRepository.save(product);
 

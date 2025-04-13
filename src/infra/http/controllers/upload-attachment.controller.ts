@@ -1,4 +1,5 @@
 import { UploadAndCreateAttachmentUseCase } from "@/domain/marketplace/application/use-cases/upload-and-create-attachment-use-case";
+import { Public } from "@/infra/auth/public";
 import {
   Controller,
   Post,
@@ -12,6 +13,7 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("/attachments")
+@Public()
 export class UploadAttachmentController {
   constructor(
     private readonly uploadAndCreateAttachmentUseCase: UploadAndCreateAttachmentUseCase

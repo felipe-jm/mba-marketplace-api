@@ -12,6 +12,7 @@ import { Public } from "@/infra/auth/public";
 import { AuthenticateSellerUseCase } from "@/domain/marketplace/application/use-cases/authenticate-seller-use-case";
 import { WrongCredentialsError } from "@/domain/marketplace/application/use-cases/errors/wrong-credentials-error";
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from "@nestjs/swagger";
+import { SellerPresenter } from "../presenters/seller-presenter";
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -83,7 +84,7 @@ export class AuthenticateController {
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
-      seller,
+      seller: SellerPresenter.toHTTP(seller),
     };
   }
 }

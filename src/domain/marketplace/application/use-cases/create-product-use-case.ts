@@ -13,6 +13,7 @@ interface CreateProductUseCaseRequest {
   priceInCents: number;
   ownerId: string;
   categoryId: string;
+  attachmentId?: string;
 }
 
 type CreateProductUseCaseResponse = Either<
@@ -36,6 +37,7 @@ export class CreateProductUseCase {
     priceInCents,
     ownerId,
     categoryId,
+    attachmentId,
   }: CreateProductUseCaseRequest): Promise<CreateProductUseCaseResponse> {
     const owner = await this.sellersRepository.findById(ownerId);
 
@@ -55,6 +57,7 @@ export class CreateProductUseCase {
       priceInCents,
       ownerId: new UniqueEntityId(ownerId),
       categoryId: new UniqueEntityId(categoryId),
+      attachmentId: attachmentId ? new UniqueEntityId(attachmentId) : undefined,
     });
 
     await this.productsRepository.create(product);

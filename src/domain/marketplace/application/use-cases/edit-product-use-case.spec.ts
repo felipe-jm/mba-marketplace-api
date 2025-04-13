@@ -12,7 +12,9 @@ import { InMemoryCategoriesRepository } from "test/repositories/in-memory-catego
 import { makeCategory } from "test/factories/make-category";
 import { Slug } from "../../enterprise/entities/value-objects/slug";
 import { InMemorySellersRepository } from "test/repositories/in-memory-sellers-repository";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryCategoriesRepository: InMemoryCategoriesRepository;
 let inMemorySellersRepository: InMemorySellersRepository;
@@ -20,11 +22,15 @@ let sut: EditProductUseCase;
 
 describe("Edit Product", () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemoryAttachmentsRepository
+    );
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository(
       inMemorySellersRepository,
-      inMemoryCategoriesRepository
+      inMemoryCategoriesRepository,
+      inMemoryAttachmentsRepository
     );
     sut = new EditProductUseCase(
       inMemoryProductsRepository,

@@ -19,8 +19,8 @@ const editAccountBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   phone: z.string(),
-  password: z.string(),
-  passwordConfirmation: z.string(),
+  password: z.string().optional(),
+  passwordConfirmation: z.string().optional(),
 });
 
 type EditAccountBodySchema = z.infer<typeof editAccountBodySchema>;

@@ -10,13 +10,15 @@ import {
 import { ProductDetails } from "@/domain/marketplace/enterprise/entities/value-objects/product-details";
 import { InMemorySellersRepository } from "./in-memory-sellers-repository";
 import { InMemoryCategoriesRepository } from "./in-memory-categories-repository";
+import { InMemoryAttachmentsRepository } from "./in-memory-attachments-repository";
 
 export class InMemoryProductsRepository implements ProductsRepository {
   public items: Product[] = [];
 
   constructor(
     private readonly sellersRepository: InMemorySellersRepository,
-    private readonly categoriesRepository: InMemoryCategoriesRepository
+    private readonly categoriesRepository: InMemoryCategoriesRepository,
+    private readonly attachmentsRepository: InMemoryAttachmentsRepository
   ) {}
 
   async findById(id: string): Promise<Product | null> {
@@ -24,6 +26,16 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
     if (!product) {
       return null;
+    }
+
+    if (product.attachmentId) {
+      const attachment = await this.attachmentsRepository.findById(
+        product.attachmentId.toString()
+      );
+
+      if (attachment) {
+        product.attachment = attachment;
+      }
     }
 
     return product;
