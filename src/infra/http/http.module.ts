@@ -40,6 +40,8 @@ import { CountNumberOfProductViewsInTheLast7DaysController } from "./controllers
 import { CountNumberOfProductViewsInTheLast7DaysUseCase } from "@/domain/marketplace/application/use-cases/count-number-of-product-views-in-the-last-7-days-use-case";
 import { RefreshTokenController } from "./controllers/refresh-token.controller";
 import { RefreshSellerTokenUseCase } from "@/domain/marketplace/application/use-cases/refresh-seller-token-use-case";
+import { UpdateSellerAvatarController } from "./controllers/update-seller-avatar.controller";
+import { UpdateSellerAvatarUseCase } from "@/domain/marketplace/application/use-cases/update-seller-avatar-use-case";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -63,6 +65,7 @@ import { RefreshSellerTokenUseCase } from "@/domain/marketplace/application/use-
     CountNumberOfViewsInTheLast30DaysByDayController,
     CountNumberOfProductViewsInTheLast7DaysController,
     RefreshTokenController,
+    UpdateSellerAvatarController,
   ],
   providers: [
     RegisterSellerUseCase,
@@ -84,6 +87,7 @@ import { RefreshSellerTokenUseCase } from "@/domain/marketplace/application/use-
     CountNumberOfViewsInTheLast30DaysByDayUseCase,
     CountNumberOfProductViewsInTheLast7DaysUseCase,
     RefreshSellerTokenUseCase,
+    UpdateSellerAvatarUseCase,
   ],
 })
 export class HttpModule {}
