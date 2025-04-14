@@ -9,6 +9,13 @@ async function bootstrap() {
   const envService = app.get(EnvService);
   const port = envService.get("PORT");
 
+  // Enable CORS
+  app.enableCors({
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  });
+
   // Setup Swagger
   const config = new DocumentBuilder()
     .setTitle("MBA Marketplace API")
