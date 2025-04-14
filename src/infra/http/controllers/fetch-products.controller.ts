@@ -15,6 +15,12 @@ const fetchProductsQueryParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),
   status: z.string().optional(),
   search: z.string().optional(),
+  categories: z
+    .string()
+    .optional()
+    .transform((value) => value?.split(",")),
+  minPrice: z.coerce.number().optional(),
+  maxPrice: z.coerce.number().optional(),
 });
 
 type FetchProductsQueryParamsSchema = z.infer<
@@ -68,6 +74,24 @@ export class FetchProductsController {
     required: false,
     description: "Search term for products",
   })
+  @ApiQuery({
+    name: "categories",
+    type: String,
+    required: false,
+    description: "Comma-separated list of category IDs",
+  })
+  @ApiQuery({
+    name: "minPrice",
+    type: Number,
+    required: false,
+    description: "Minimum product price",
+  })
+  @ApiQuery({
+    name: "maxPrice",
+    type: Number,
+    required: false,
+    description: "Maximum product price",
+  })
   @ApiResponse({
     status: 200,
     description: "List of products",
@@ -80,12 +104,15 @@ export class FetchProductsController {
   async fetchProducts(
     @Query(fetchProductsValidationPipe) query: FetchProductsQueryParamsSchema
   ) {
-    const { page, status, search } = query;
+    const { page, status, search, categories, minPrice, maxPrice } = query;
 
     const result = await this.fetchProductsUseCase.execute({
       page,
       status,
       search,
+      categories,
+      minPrice,
+      maxPrice,
     });
 
     if (result.isLeft()) {

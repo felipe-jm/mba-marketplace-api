@@ -13,11 +13,17 @@ import { PaginationParams } from "@/core/repositories/pagination-params";
 type FindManyParams = PaginationParams & {
   status?: string;
   search?: string;
+  categories?: string[];
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 type FindManyBySellerParams = PaginationParams & {
   status?: string;
   search?: string;
+  categories?: string[];
+  minPrice?: number;
+  maxPrice?: number;
   sellerId: string;
 };
 
@@ -63,7 +69,14 @@ export class PrismaProductsRepository implements ProductsRepository {
     return PrismaProductDetailsMapper.toDomain(product);
   }
 
-  async findMany({ page, status, search }: FindManyParams): Promise<Product[]> {
+  async findMany({
+    page,
+    status,
+    search,
+    categories,
+    minPrice,
+    maxPrice,
+  }: FindManyParams): Promise<Product[]> {
     const products = await this.prisma.product.findMany({
       skip: (page - 1) * 20,
       take: 20,
@@ -88,6 +101,9 @@ export class PrismaProductsRepository implements ProductsRepository {
               },
             ]
           : undefined,
+        ...(categories?.length ? { categoryId: { in: categories } } : {}),
+        ...(minPrice !== undefined ? { priceInCents: { gte: minPrice } } : {}),
+        ...(maxPrice !== undefined ? { priceInCents: { lte: maxPrice } } : {}),
       },
       include: {
         attachment: true,
@@ -101,6 +117,9 @@ export class PrismaProductsRepository implements ProductsRepository {
     page,
     status,
     search,
+    categories,
+    minPrice,
+    maxPrice,
     sellerId,
   }: FindManyBySellerParams): Promise<Product[]> {
     const products = await this.prisma.product.findMany({
@@ -128,6 +147,9 @@ export class PrismaProductsRepository implements ProductsRepository {
             ]
           : undefined,
         ownerId: sellerId,
+        ...(categories?.length ? { categoryId: { in: categories } } : {}),
+        ...(minPrice !== undefined ? { priceInCents: { gte: minPrice } } : {}),
+        ...(maxPrice !== undefined ? { priceInCents: { lte: maxPrice } } : {}),
       },
       include: {
         attachment: true,

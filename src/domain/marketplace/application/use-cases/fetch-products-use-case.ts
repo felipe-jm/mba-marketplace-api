@@ -7,6 +7,9 @@ interface FetchProductsUseCaseRequest {
   page: number;
   status?: string;
   search?: string;
+  categories?: string[];
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 type FetchProductsUseCaseResponse = Either<
@@ -24,11 +27,17 @@ export class FetchProductsUseCase {
     page,
     status,
     search,
+    categories,
+    minPrice,
+    maxPrice,
   }: FetchProductsUseCaseRequest): Promise<FetchProductsUseCaseResponse> {
     const products = await this.productRepository.findMany({
       page,
       status,
       search,
+      categories,
+      minPrice,
+      maxPrice,
     });
 
     return right({ products });

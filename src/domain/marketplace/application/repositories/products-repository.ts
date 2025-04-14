@@ -5,11 +5,17 @@ import { ProductDetails } from "../../enterprise/entities/value-objects/product-
 export interface FindManyParams extends PaginationParams {
   status?: string;
   search?: string;
+  categories?: string[];
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface FindManyBySellerParams extends PaginationParams {
   status?: string;
   search?: string;
+  categories?: string[];
+  minPrice?: number;
+  maxPrice?: number;
   sellerId: string;
 }
 

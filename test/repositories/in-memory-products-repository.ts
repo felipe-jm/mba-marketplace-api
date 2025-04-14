@@ -80,7 +80,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
   }
 
   findMany(params: FindManyParams): Promise<Product[]> {
-    const { search, status, page } = params;
+    const { search, status, page, categories, minPrice, maxPrice } = params;
 
     const sortedItems = [...this.items];
     sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -96,13 +96,28 @@ export class InMemoryProductsRepository implements ProductsRepository {
           product.title.toLowerCase().includes(search.toLowerCase()) ||
           product.description.toLowerCase().includes(search.toLowerCase())
       );
+    }
+
+    if (categories?.length) {
+      products = products.filter((product) =>
+        categories.includes(product.categoryId.toString())
+      );
+    }
+
+    if (minPrice !== undefined) {
+      products = products.filter((product) => product.priceInCents >= minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      products = products.filter((product) => product.priceInCents <= maxPrice);
     }
 
     return Promise.resolve(products);
   }
 
   findManyBySeller(params: FindManyBySellerParams): Promise<Product[]> {
-    const { search, status, page, sellerId } = params;
+    const { search, status, page, sellerId, categories, minPrice, maxPrice } =
+      params;
 
     const sortedItems = [...this.items];
     sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -118,6 +133,20 @@ export class InMemoryProductsRepository implements ProductsRepository {
           product.title.toLowerCase().includes(search.toLowerCase()) ||
           product.description.toLowerCase().includes(search.toLowerCase())
       );
+    }
+
+    if (categories?.length) {
+      products = products.filter((product) =>
+        categories.includes(product.categoryId.toString())
+      );
+    }
+
+    if (minPrice !== undefined) {
+      products = products.filter((product) => product.priceInCents >= minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      products = products.filter((product) => product.priceInCents <= maxPrice);
     }
 
     products = products.filter(
